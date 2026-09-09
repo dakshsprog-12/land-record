@@ -1,10 +1,9 @@
-from paddleocr import PaddleOCR
+from app.ocr.engine import OCREngine
 
-ocr = PaddleOCR(
-    lang="en"
-)
 
-result = ocr.predict("img3.jpeg")
+engine = OCREngine()
+
+result = engine.process("img.webp")
 
 for res in result:
     res.print()
