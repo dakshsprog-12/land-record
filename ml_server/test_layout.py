@@ -9,6 +9,12 @@ from app.layout.cell_grouping import get_item_text
 from app.layout.table_scoring import calculate_table_score
 from app.layout.table_candidates import detect_table_candidates
 from app.extraction.key_value import detect_inline_key_values
+from app.extraction.spatial_key_value import detect_spatial_key_values
+from app.layout.table_regions import detect_table_subregions
+from app.layout.table_regions import (
+    detect_table_subregions,
+    line_matches_columns
+)
 
 import os
 
@@ -164,6 +170,10 @@ table_candidates = detect_table_candidates(
     regions,
     min_score=0.5
 )
+table_region_indexes = {
+    candidate["region_index"]
+    for candidate in table_candidates
+}
 
 for candidate in table_candidates:
 
@@ -196,4 +206,86 @@ for candidate in key_values:
         f"\nX/Y    : "
         f"{candidate['center_x']:.1f}, "
         f"{candidate['center_y']:.1f}"
-    )                        
+    )
+
+
+print("\n\nSPATIAL KEY-VALUE CANDIDATES")
+print("=" * 100)
+
+spatial_key_values = detect_spatial_key_values(
+    regions,
+    table_region_indexes=table_region_indexes
+)
+
+for candidate in spatial_key_values:
+    print(
+        f"\nLABEL  : {candidate['label']}"
+        f"\nVALUE  : {candidate['value']}"
+        f"\nLABEL CONF : {candidate['label_confidence']:.3f}"
+        f"\nVALUE CONF : {candidate['value_confidence']:.3f}"
+        f"\nGAP    : {candidate['horizontal_gap']:.1f}"
+    )
+
+
+print("\nTABLE REGION INDEXES")
+print("=" * 100)
+print(table_region_indexes)
+
+print("\n\nSPATIAL KEY-VALUE CANDIDATES")
+print("=" * 100)
+
+for candidate in spatial_key_values:
+    print(
+        f"\nREGION : {candidate['region_index']}"
+        f"\nLABEL  : {candidate['label']}"
+        f"\nVALUE  : {candidate['value']}"
+        f"\nLABEL CONF : {candidate['label_confidence']:.3f}"
+        f"\nVALUE CONF : {candidate['value_confidence']:.3f}"
+        f"\nGAP    : {candidate['horizontal_gap']:.1f}"
+    )
+
+print("\nDETECTED TABLE COLUMNS")
+
+for candidate in table_candidates:
+    print(
+        f"\nREGION {candidate['region_index']}"
+    )
+
+    for column in candidate["columns"]:
+        print(
+            f"  X={column['center_x']:.1f} "
+            f"OCC={column['occurrences']}"
+        )
+
+print("\nTABLE SUBREGIONS")
+
+for candidate in table_candidates:
+    region_index = candidate["region_index"]
+    region = candidate["region"]
+    columns = candidate["columns"]
+
+    subregions = detect_table_subregions(
+        region,
+        columns
+    )
+    for line_index, line in enumerate(region):
+        matches = line_matches_columns(
+            line,
+            columns
+        )
+
+        print(
+            f"    LINE {line_index}: "
+            f"Y={line['center_y']:.1f} "
+            f"MATCHES={matches} "
+            f"TEXT={' | '.join(item['text'] for item in line['items'])}"
+        )
+    print(f"\nREGION {region_index}")
+
+    for subregion in subregions:
+        print(
+            f"  TABLE: "
+            f"Y={subregion['top']:.1f} "
+            f"to "
+            f"{subregion['bottom']:.1f}"
+        )                                    
