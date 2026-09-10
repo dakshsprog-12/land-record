@@ -4,10 +4,14 @@ from paddleocr import PaddleOCR
 class OCREngine:
     def __init__(self, lang="en"):
         self.ocr = PaddleOCR(
-            lang=lang
+            lang=lang,
+            use_doc_orientation_classify=False,
+            use_doc_unwarping=False,
+            use_textline_orientation=False
         )
 
-    def process(self, image_path):
+    def process(self, image_path, use_preprocessing=False):
+
         results = self.ocr.predict(image_path)
 
         output = []
