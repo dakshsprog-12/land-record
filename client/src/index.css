@@ -3,6 +3,7 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -11,8 +12,8 @@
   --bg: #fff;
   --border: oklch(0.922 0 0);
   --code-bg: #f4f3ec;
-  --accent: oklch(0.97 0 0);
-  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent: rgb(117, 125, 111);
+  --accent-bg: rgb(238, 234, 215);
   --accent-border: rgba(170, 59, 255, 0.5);
   --social-bg: rgba(244, 243, 236, 0.5);
   --shadow:
@@ -104,8 +105,8 @@
     --bg: #16171d;
     --border: #2e303a;
     --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent: rgb(117, 125, 111);
+    --accent-bg: rgb(238, 234, 215);
     --accent-border: rgba(192, 132, 252, 0.5);
     --social-bg: rgba(47, 48, 58, 0.5);
     --shadow:
