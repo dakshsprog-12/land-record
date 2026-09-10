@@ -4,7 +4,7 @@ from app.pdf.ocr_processor import process_pdf
 
 ocr_engine = OCREngine(lang="hi")
 
-pdf_path = "bhumi_rasid.pdf"
+pdf_path = "test_document.pdf"
 output_dir = "pdf_pages"
 
 result = process_pdf(
@@ -14,11 +14,19 @@ result = process_pdf(
 )
 
 for page in result:
-    print(f"\n===== PAGE {page['page']} =====")
 
-    for item in page["results"]:
-        print(
-            item["text"],
-            "|",
-            item["confidence"]
-        )
+    print(f"\n===== PAGE {page['page']} =====")
+    print(f"Source: {page['source']}")
+
+    if page["source"] == "text":
+
+        print(page["text"])
+
+    elif page["source"] == "ocr":
+
+        for item in page["results"]:
+            print(
+                item["text"],
+                "|",
+                item["confidence"]
+            )
