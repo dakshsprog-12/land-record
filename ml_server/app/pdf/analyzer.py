@@ -1,9 +1,9 @@
-import fitz  # PyMuPDF
+import pymupdf  # PyMuPDF
 
 
 def analyze_pdf(pdf_path):
 
-    pdf = fitz.open(pdf_path)
+    pdf = pymupdf.open(pdf_path)
 
     pages = []
 

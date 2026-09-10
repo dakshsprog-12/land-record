@@ -1,9 +1,9 @@
-import fitz
+import pymupdf
 
 
 def extract_text_from_pdf(pdf_path):
 
-    pdf = fitz.open(pdf_path)
+    pdf = pymupdf.open(pdf_path)
 
     pages = []
 
