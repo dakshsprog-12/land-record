@@ -1,10 +1,16 @@
-import { Routes, Route } from "react-router-dom";
-import UploadCard from "../components/UploadCard.jsx";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePage from "../pages/HomePage.jsx";
+import UploadPage from "../pages/UploadPage.jsx";
 
-export default function AppRoutes() {
+const AppRoutes = () => {
   return (
+    <BrowserRouter>
     <Routes>
-      <Route path="/" element={<UploadCard />} />
+        <Route path='/' element={ <HomePage /> } />
+        <Route path='/upload' element={ <UploadPage /> } />
     </Routes>
-  );
+    </BrowserRouter>
+  )
 }
+
+export default AppRoutes

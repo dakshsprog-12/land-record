@@ -43,7 +43,7 @@ export default function UploadButton() {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 w-full">
+    <div className="flex flex-col items-center gap-4 w-full flex-1">
       {/* Hidden input with "multiple" enabled */}
       <input
         type="file"
@@ -91,7 +91,7 @@ export default function UploadButton() {
                 key={index} 
                 className="flex items-center justify-between gap-2 p-2 bg-white rounded border border-neutral-200"
               >
-                <span className="text-xs font-mono text-neutral-700 truncate max-w-[160px]">
+                <span className="text-xs font-mono text-neutral-700 truncate max-w-60">
                   {file.name}
                 </span>
 
