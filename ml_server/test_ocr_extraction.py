@@ -1,30 +1,25 @@
 from app.ocr.engine import OCREngine
-from app.extraction.land_record import extract_land_record_fields
-
-
-image_path = "bhumi_rasid.jpeg"
-
-ocr_engine = OCREngine(lang="hi")
-
-ocr_results = ocr_engine.process(image_path)
-
-
-# Combine OCR text
-text = "\n".join(
-    item["text"]
-    for item in ocr_results
+from app.layout.line_grouping import group_into_lines
+from app.layout.spatial import enrich_lines
+from app.extraction.key_value import (
+    detect_inline_key_values,
+    attach_continuations
 )
 
 
-print("\n===== OCR TEXT =====\n")
-print(text)
+engine = OCREngine(lang="hi")
 
+results = engine.process("bhumi_rasid.jpeg")
 
-# Extract fields
-fields = extract_land_record_fields(text)
+lines = group_into_lines(results)
+lines = enrich_lines(lines)
 
+result = detect_inline_key_values(lines)
 
-print("\n===== EXTRACTED FIELDS =====\n")
+result = attach_continuations(
+    result,
+    lines
+)
 
-for field, value in fields.items():
-    print(f"{field}: {value}")
+for item in result:
+    print(item)

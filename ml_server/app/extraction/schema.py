@@ -1,0 +1,18 @@
+CANONICAL_FIELDS = [
+    "landowner_name",
+    "guardian_name",
+    "address",
+    "district",
+    "tehsil",
+    "village",
+    "police_station",
+    "circle",
+    "survey_number",
+    "khasra_number",
+    "khata_number",
+    "jamabandi_number",
+    "plot_area",
+    "land_classification",
+    "mutation_number",
+    "registration_number",
+]
