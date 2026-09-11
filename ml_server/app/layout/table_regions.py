@@ -1,137 +1,127 @@
-import re
-
-
 def get_line_top(line):
-    return min(item["bbox"][1] for item in line["items"])
+    return min(
+        item["bbox"][1]
+        for item in line["items"]
+    )
 
 
 def get_line_bottom(line):
-    return max(item["bbox"][3] for item in line["items"])
+    return max(
+        item["bbox"][3]
+        for item in line["items"]
+    )
 
 
-def line_matches_columns(line, columns, x_tolerance=35):
+def get_line_width(line):
+    left = min(
+        item["bbox"][0]
+        for item in line["items"]
+    )
+
+    right = max(
+        item["bbox"][2]
+        for item in line["items"]
+    )
+
+    return right - left
+
+
+def line_matches_columns(
+    line,
+    columns,
+    x_tolerance=35
+):
     matched_columns = set()
 
     for item in line["items"]:
         item_x = item["center_x"]
 
         for index, column in enumerate(columns):
-            if abs(item_x - column["center_x"]) <= x_tolerance:
+            if abs(
+                item_x - column["center_x"]
+            ) <= x_tolerance:
                 matched_columns.add(index)
                 break
 
     return len(matched_columns)
 
 
-def looks_like_data_line(line):
-    text = " ".join(
-        item["text"]
-        for item in line["items"]
-    ).strip()
-
-    if not text:
-        return False
-
-    digit_count = sum(
-        character.isdigit()
-        for character in text
-    )
-
-    return digit_count >= 2
-
-
-def get_line_score(line, columns, x_tolerance=35):
-    match_count = line_matches_columns(
+def is_table_like_line(
+    line,
+    columns,
+    x_tolerance=35,
+    min_matches=3,
+    min_items=2
+):
+    matches = line_matches_columns(
         line,
         columns,
-        x_tolerance=x_tolerance
+        x_tolerance
     )
 
-    data = looks_like_data_line(line)
+    item_count = len(line["items"])
 
-    score = 0
-
-    if match_count >= 2:
-        score += 1
-
-    if match_count >= 4:
-        score += 1
-
-    if data:
-        score += 1
-
-    return score
+    return (
+        matches >= min_matches
+        and item_count >= min_items
+    )
 
 
 def detect_table_subregions(
     region,
     columns,
-    min_score=1,
-    min_table_lines=2,
-    x_tolerance=35
+    x_tolerance=35,
+    min_matches=3,
+    min_items=3,
+    max_gap=45
 ):
     if not region or not columns:
         return []
 
-    line_scores = []
+    table_lines = []
 
-    for index, line in enumerate(region):
-
-        score = get_line_score(
+    for line in region:
+        if is_table_like_line(
             line,
             columns,
-            x_tolerance=x_tolerance
-        )
+            x_tolerance=x_tolerance,
+            min_matches=min_matches,
+            min_items=min_items
+        ):
+            table_lines.append(line)
 
-        line_scores.append({
-            "index": index,
-            "score": score
-        })
-
-    groups = []
-    current_group = []
-
-    for item in line_scores:
-
-        if item["score"] >= min_score:
-
-            if current_group:
-                previous = current_group[-1]
-
-                if item["index"] != previous["index"] + 1:
-
-                    if len(current_group) >= min_table_lines:
-                        groups.append(current_group)
-
-                    current_group = []
-
-            current_group.append(item)
-
-        else:
-
-            if len(current_group) >= min_table_lines:
-                groups.append(current_group)
-
-            current_group = []
-
-    if len(current_group) >= min_table_lines:
-        groups.append(current_group)
+    if not table_lines:
+        return []
 
     subregions = []
+    current = [table_lines[0]]
 
-    for group in groups:
+    for line in table_lines[1:]:
+        previous = current[-1]
 
-        start_index = group[0]["index"]
-        end_index = group[-1]["index"]
+        gap = (
+            get_line_top(line)
+            - get_line_bottom(previous)
+        )
 
-        lines = region[start_index:end_index + 1]
+        if gap <= max_gap:
+            current.append(line)
+        else:
+            subregions.append(current)
+            current = [line]
 
-        subregions.append({
-            "start_index": start_index,
-            "end_index": end_index,
-            "lines": lines,
+    subregions.append(current)
+
+    results = []
+
+    for lines in subregions:
+        if len(lines) < 2:
+            continue
+
+        results.append({
             "top": get_line_top(lines[0]),
-            "bottom": get_line_bottom(lines[-1])
+            "bottom": get_line_bottom(lines[-1]),
+            "lines": lines
         })
 
-    return subregions
+    return results

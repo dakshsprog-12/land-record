@@ -15,6 +15,11 @@ from app.layout.table_regions import (
     detect_table_subregions,
     line_matches_columns
 )
+from app.layout.table_regions import (
+    detect_table_subregions,
+    line_matches_columns,
+    get_line_width
+)
 
 import os
 
@@ -288,4 +293,18 @@ for candidate in table_candidates:
             f"Y={subregion['top']:.1f} "
             f"to "
             f"{subregion['bottom']:.1f}"
-        )                                    
+        )
+
+
+for line_index, line in enumerate(region, start=0):
+    matches = line_matches_columns(line, columns)
+    width = get_line_width(line)
+
+    print(
+        f"    LINE {line_index}: "
+        f"Y={line['center_y']:.1f} "
+        f"MATCHES={matches} "
+        f"ITEMS={len(line['items'])} "
+        f"WIDTH={width:.1f} "
+        f"TEXT={' | '.join(item['text'] for item in line['items'])}"
+    )                                           
