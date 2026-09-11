@@ -89,3 +89,21 @@ def extract_land_record_fields(text):
                 break
 
     return fields
+
+
+def build_land_record(candidates):
+    record = {}
+
+    for candidate in candidates:
+        field = candidate["field"]
+
+        record[field] = {
+            "value": candidate["value"],
+            "confidence": candidate["confidence"],
+            "evidence": {
+                "text": candidate["source_item"]["text"],
+                "bbox": candidate["bbox"]
+            }
+        }
+
+    return record

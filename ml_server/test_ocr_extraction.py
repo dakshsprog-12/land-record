@@ -5,6 +5,7 @@ from app.extraction.key_value import (
     detect_inline_key_values,
     attach_continuations
 )
+from app.extraction.land_record import build_land_record
 
 
 engine = OCREngine(lang="hi")
@@ -15,11 +16,10 @@ lines = group_into_lines(results)
 lines = enrich_lines(lines)
 
 result = detect_inline_key_values(lines)
-
 result = attach_continuations(
     result,
     lines
 )
 
-for item in result:
-    print(item)
+record = build_land_record(result)
+print(record)

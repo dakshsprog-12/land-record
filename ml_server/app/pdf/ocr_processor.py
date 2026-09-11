@@ -3,6 +3,7 @@ import os
 from app.pdf.processor import convert_pdf_to_images
 from app.pdf.analyzer import analyze_pdf
 from app.pdf.text_extractor import extract_text_from_pdf
+from app.extraction.pipeline import extract_land_record
 
 
 def process_pdf(pdf_path, output_dir, ocr_engine):
@@ -53,11 +54,15 @@ def process_pdf(pdf_path, output_dir, ocr_engine):
                 image_path
             )
 
+            result = extract_land_record(
+                ocr_result
+            )
+
             pages.append({
                 "page": page_number,
                 "source": "ocr",
                 "image": image_path,
-                "results": ocr_result
+                "result": result
             })
 
     return pages
