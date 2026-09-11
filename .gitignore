@@ -20,3 +20,11 @@ yarn-error.log*
 .DS_Store
 changes.diff
 .pdf
+ml_server/bhumi_rasid.pdf
+ml_server/nikhil.pdf
+ml_server/test_document.pdf
+ml_server/pdf_pages/page_1.png
+ml_server/temp_layout/page_1.png
+ml_server/temp_uploads/pdf_pages/page_1.png
+ml_server/temp_uploads/bhumi_rasid.pdf
+ml_server/temp_uploads/test_document.pdf
