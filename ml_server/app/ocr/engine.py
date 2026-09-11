@@ -27,5 +27,7 @@ class OCREngine:
                     "confidence": float(score),
                     "bbox": box.tolist()
                 })
+                
+                print(output)
 
         return output

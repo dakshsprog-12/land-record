@@ -4,6 +4,7 @@ from app.pdf.processor import convert_pdf_to_images
 from app.pdf.analyzer import analyze_pdf
 from app.pdf.text_extractor import extract_text_from_pdf
 from app.extraction.pipeline import extract_land_record
+from app.extraction.text_pipeline import extract_land_record_from_text
 
 
 def process_pdf(pdf_path, output_dir, ocr_engine):
@@ -39,11 +40,14 @@ def process_pdf(pdf_path, output_dir, ocr_engine):
         page_number = page_info["page"]
 
         if page_info["has_text"]:
-
+            result = extract_land_record_from_text(
+                text_info["text"]
+            )
             pages.append({
                 "page": page_number,
                 "source": "text",
-                "text": text_info["text"]
+                "text": text_info["text"],
+                "result": result
             })
 
         else:

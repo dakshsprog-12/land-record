@@ -4,7 +4,7 @@ def validate_field(field, value, confidence):
     if value is None or not str(value).strip():
         issues.append("Missing value")
 
-    if confidence < 0.7:
+    if confidence is not None and confidence < 0.7:
         issues.append("Low OCR confidence")
 
     numeric_fields = {

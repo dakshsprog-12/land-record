@@ -139,7 +139,14 @@
   padding: 0;
 }
 
+html {
+  width: 100%;
+  height: 100%;
+}
+
 body {
+  width: 100%;
+  height: 100%;
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font);
@@ -150,6 +157,8 @@ body {
 }
 
 #root {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -163,4 +172,8 @@ a {
 
 button {
   cursor: pointer;
+}
+
+input{
+  padding: 0 10px;
 }
