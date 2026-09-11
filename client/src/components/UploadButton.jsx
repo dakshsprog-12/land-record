@@ -9,21 +9,20 @@ export default function UploadButton() {
     fileInputRef.current?.click();
   };
 
-  // Jab user ek ya ek se zyada files chune
+  // for one or more file selection
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
-      // Nayi selected files ko purani list me append ya replace kar sakte hain
       const newFiles = Array.from(e.target.files);
       setSelectedFiles((prev) => [...prev, ...newFiles]);
     }
   };
 
-  // Kisi specific file ko list se hatana
+  // specific file clear
   const handleRemoveSingle = (indexToRemove) => {
     setSelectedFiles((prev) => prev.filter((_, idx) => idx !== indexToRemove));
   };
 
-  // Saari files ek sath hatana
+  // to clear all
   const handleClearAll = () => {
     setSelectedFiles([]);
     if (fileInputRef.current) {
@@ -31,7 +30,7 @@ export default function UploadButton() {
     }
   };
 
-  // Specific file ka preview
+  // specific preview
   const handlePreview = (file) => {
     const fileUrl = URL.createObjectURL(file);
     window.open(fileUrl, "_blank");
@@ -44,7 +43,6 @@ export default function UploadButton() {
 
   return (
     <div className="flex flex-col items-center gap-4 w-full">
-      {/* Hidden input with "multiple" enabled */}
       <input
         type="file"
         ref={fileInputRef}
