@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { Button } from "./ui/button";
+import { InputField } from "./auth/InputField";
 
 export default function UploadButton() {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -44,7 +45,7 @@ export default function UploadButton() {
   return (
     <div className="flex flex-col items-center gap-4 w-full flex-1">
       {/* Hidden input with "multiple" enabled */}
-      <input
+      <InputField
         type="file"
         ref={fileInputRef}
         onChange={handleFileChange}
@@ -54,14 +55,9 @@ export default function UploadButton() {
       />
 
       {/* Choose Files Button */}
-      <Button 
+      <Button
         type="button"
-        onClick={handleUploadClick} 
-        size="lg"
-        style={{ 
-          backgroundColor: "var(--btn-bg, #4f5a4a)", 
-          color: "var(--btn-text, #ffffff)" 
-        }}
+        onClick={handleUploadClick}
         className="w-full font-medium"
       >
         {selectedFiles.length > 0 ? "Add More Files" : "Choose Files"}
@@ -86,8 +82,8 @@ export default function UploadButton() {
           {/* List of files */}
           <div className="flex flex-col gap-2">
             {selectedFiles.map((file, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="flex items-center justify-between gap-2 p-2 bg-white rounded border border-neutral-200"
               >
                 <span className="text-xs font-mono text-neutral-700 truncate max-w-60">

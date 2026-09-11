@@ -13,7 +13,6 @@ const AppRoutes = () => {
         <Route path="/upload" element={<UploadPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        {/* <Route path="/dashboard" element={<UploadCard />} /> */}
         <Route path="/records" element={<RecordDetails />} />
       </Routes>
     </BrowserRouter>
