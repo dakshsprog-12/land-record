@@ -1,33 +1,16 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react"; // Icons import
 import { InputField } from "./InputField";
+import useAuth from "@/hooks/useAuth";
 
 export default function Login() {
-  const [showPassword, setShowPassword] = useState(false); // Password visibility state
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { handleLogin } = useAuth();
 
-  const navigate = useNavigate();
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.email || !formData.password) {
-      alert("Please fill all required fields");
-      return;
-    }
-
-    navigate("/dashboard");
-  };
 
   return (
     <div className="h-full w-full flex items-center justify-center">
@@ -40,14 +23,21 @@ export default function Login() {
         </div>
 
         <div className="p-6 pt-2">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              handleLogin({ email, password });
+            }}
+            className="flex flex-col gap-3"
+          >
             <InputField
               type="email"
               name="email"
               label="Email"
-              value={formData.email}
-              onChange={handleInputChange}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="name@domain.com"
+              autoComplete="off"
               className="w-full p-2.5 text-xs border border-neutral-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-neutral-800"
             />
 
@@ -56,13 +46,14 @@ export default function Login() {
                 type={showPassword ? "text" : "password"}
                 label="Password"
                 name="password"
-                value={formData.password}
-                onChange={handleInputChange}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
+                autoComplete="off"
                 className="w-full p-2.5 pr-10 text-xs border border-neutral-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-neutral-800"
               />
               <Button
-                variant="secondary"
+                variant="link"
                 size="icon"
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
