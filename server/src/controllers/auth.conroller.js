@@ -3,11 +3,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export const registerController = async (req, res) => {
-  const { username, name, email, password, bio, profileImg } = req.body;
+  const { name, email, password } = req.body;
 
-  const isUserExists = await userModel.findOne({
-    $or: [{ username }, { email }],
-  });
+  const isUserExists = await userModel.findOne({ email });
   if (isUserExists)
     return res.status(409).json({
       message:
@@ -21,12 +19,9 @@ export const registerController = async (req, res) => {
       bcrypt.hash(password, salt, async (err, hash) => {
         if (!err) {
           const user = await userModel.create({
-            username,
             name,
             email,
             password: hash,
-            bio,
-            profileImg,
           });
           const token = jwt.sign(
             { userId: user._id },
@@ -62,11 +57,9 @@ export const registerController = async (req, res) => {
 };
 
 export const loginController = async (req, res) => {
-  const { userCredential, password } = req.body;
+  const { email, password } = req.body;
 
-  const user = await userModel.findOne({
-    $or: [{ username: userCredential }, { email: userCredential }],
-  });
+  const user = await userModel.findOne({ email });
 
   if (!user)
     return res.status(404).json({
@@ -90,11 +83,8 @@ export const loginController = async (req, res) => {
       return res.status(200).json({
         message: "User loggedIn successfully",
         user: {
-          username: user.username,
           name: user?.name,
           email: user.email,
-          bio: user.bio,
-          profileImg: user.profileImg,
         },
       });
     } else
