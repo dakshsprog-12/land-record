@@ -36,22 +36,21 @@ export const registerController = async (req, res) => {
           res.status(201).json({
             message: "User registered successfully",
             user: {
-              username: user.username,
               name: user.name,
               email: user.email,
-              bio: user.bio,
-              profileImg: user.profileImg,
               _id: user._id,
             },
           });
         } else
           return res.status(400).json({
             message: "User is not created",
+            err: "bcrypt"
           });
       });
     } else
       return res.status(400).json({
         message: "User is not created",
+        err:"hashing"
       });
   });
 };
